@@ -61,9 +61,9 @@ export default function App(){
 
       {/* Trip Poster */}
       <div style={{padding:'12px 16px 0'}}>
-        <button onClick={()=>setPosterOpen(true)} style={{all:'unset',cursor:'zoom-in',display:'block',width:'100%',background:'#fff',border:'3px solid var(--ice)',borderRadius:20,padding:8,boxShadow:'0 10px 26px rgba(60,120,180,.14)',overflow:'hidden'}}>
+        <div onClick={()=>setPosterOpen(true)} style={{cursor:'zoom-in',width:'100%',background:'#fff',border:'3px solid var(--ice)',borderRadius:20,padding:8,boxShadow:'0 10px 26px rgba(60,120,180,.14)',overflow:'hidden'}}>
           <img src="/trip-poster.jpg" alt="แผนเที่ยวฮาร์บิน 8 วัน" loading="lazy" style={{display:'block',width:'100%',height:'auto',borderRadius:14}}/>
-        </button>
+        </div>
         <p style={{margin:'8px 0 0',fontSize:12,textAlign:'center',color:'rgba(43,58,85,.5)'}}>แตะเพื่อดูภาพรวมเต็มจอ</p>
       </div>
 
