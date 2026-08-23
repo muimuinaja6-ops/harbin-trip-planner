@@ -1,0 +1,13 @@
+{
+  "name": "Harbin ฮาใจ - Trip Planner",
+  "short_name": "Harbin ฮาใจ",
+  "description": "แผนเที่ยวฮาร์บิน 8 วัน 25 ธ.ค. 2026 - 1 ม.ค. 2027",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#BFE6FF",
+  "theme_color": "#BFE6FF",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

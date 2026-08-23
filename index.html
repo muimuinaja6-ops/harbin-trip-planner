@@ -3,6 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#BFE6FF" />
     <meta name="description" content="Harbin Trip Planner - แผนเที่ยวฮาร์บิน 8 วัน 25 ธ.ค. 2026 - 1 ม.ค. 2027" />
@@ -19,5 +22,6 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+    <script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');</script>
   </body>
 </html>

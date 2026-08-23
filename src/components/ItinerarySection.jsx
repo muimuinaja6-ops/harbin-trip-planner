@@ -1,7 +1,17 @@
 import React from 'react';
 import DAYS from '../data/days';
 
+function getTodayIdx() {
+  const now = new Date();
+  const m = now.getMonth(), d = now.getDate();
+  // Trip: Dec 25 - Jan 1
+  if (m === 11 && d >= 25) return d - 25; // Dec 25=0, Dec 31=6
+  if (m === 0 && d === 1) return 7; // Jan 1=7
+  return -1; // not in trip
+}
+
 export default function ItinerarySection({ openDay, setOpenDay }) {
+  const todayIdx = getTodayIdx();
   return (
     <div style={{ padding: '28px 0 0' }}>
       <div style={{ padding: '0 16px 12px' }}>
@@ -17,8 +27,9 @@ export default function ItinerarySection({ openDay, setOpenDay }) {
           const open = openDay === i;
           const coldest = d.lo <= -30;
           const tone = coldest ? 'var(--pink)' : 'var(--orange)';
+          const isToday = i === todayIdx;
           return (
-            <div key={i} style={{ background: '#fff', border: `2px solid ${open ? 'var(--orange)' : 'var(--ice)'}`, borderRadius: 18, overflow: 'hidden', boxShadow: '0 6px 16px rgba(60,120,180,.06)' }}>
+            <div key={i} style={{ background: '#fff', border: `2px solid ${isToday ? 'var(--pink)' : open ? 'var(--orange)' : 'var(--ice)'}`, borderRadius: 18, overflow: 'hidden', boxShadow: '0 6px 16px rgba(60,120,180,.06)' }}>
               <div
                 onClick={() => setOpenDay(open ? null : i)}
                 style={{ cursor: 'pointer', display: 'flex', gap: 10, alignItems: 'center', padding: 14 }}
@@ -26,6 +37,7 @@ export default function ItinerarySection({ openDay, setOpenDay }) {
                 <div style={{ flex: 'none', width: 46, textAlign: 'center' }}>
                   <div style={{ fontFamily: "'Baloo 2',sans-serif", fontSize: 26, fontWeight: 800, lineHeight: 1, color: tone }}>{d.n}</div>
                   <div style={{ fontSize: 10, fontWeight: 700, marginTop: 4, color: 'rgba(43,58,85,.55)' }}>{d.mon} · {d.wd}</div>
+                  {isToday && <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--pink-dk)', marginTop: 4, background: 'var(--pink-100)', borderRadius: 999, padding: '2px 6px' }}>วันนี้</div>}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 15, lineHeight: 1.3, fontWeight: 700, color: 'var(--navy)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.title}</div>
