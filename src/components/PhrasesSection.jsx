@@ -32,25 +32,40 @@ export default function PhrasesSection(){
     const th=newPhrase.trim();if(!th||addBusy)return;
     setAddBusy(true);setAddMsg('กำลังแปล…');
     try {
-      // Use Google Translate (unofficial free endpoint) to get Chinese
-      const res=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=th&tl=zh-CN&dt=t&q=${encodeURIComponent(th)}`);
+      // MyMemory API: free, no key needed, works in China
+      const res=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(th)}&langpair=th|zh-CN`);
       const data=await res.json();
-      const cn=data?.[0]?.[0]?.[0]||'';
-      if(!cn)throw new Error('no translation');
-      // Get pinyin romanization
-      const res2=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=rm&q=${encodeURIComponent(cn)}`);
-      const data2=await res2.json();
-      const pinyin=data2?.[0]?.[0]?.[3]||'';
-      const entry={c:'ของฉัน',th,cn,read:pinyin||'(กดฟังเสียงอ่านแทน)'};
+      const cn=data?.responseData?.translatedText||'';
+      if(!cn||cn===th)throw new Error('no translation');
+      // Get pinyin via MyMemory zh-CN -> en (romanization in match)
+      let pinyin='';
+      try{
+        const res2=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(cn)}&langpair=zh-CN|en`);
+        const data2=await res2.json();
+        // MyMemory doesn't give pinyin directly, so we skip and rely on TTS
+        pinyin='(กดฟังเสียงอ่าน)';
+      }catch(e){}
+      const entry={c:'ของฉัน',th,cn,read:pinyin};
       const list=[...myPhrases,entry];
       setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
       setNewPhrase('');setAddMsg('แปลสำเร็จ · เพิ่มในหมวด ของฉัน');
     } catch(e) {
-      // Fallback: add without translation
-      const entry={c:'ของฉัน',th,cn:th,read:''};
-      const list=[...myPhrases,entry];
-      setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
-      setNewPhrase('');setAddMsg('แปลไม่ได้ (เน็ตหลุด?) เพิ่มเป็นภาษาไทยไว้ก่อน');
+      // Fallback: try Google Translate (needs VPN in China)
+      try{
+        const res=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=th&tl=zh-CN&dt=t&q=${encodeURIComponent(th)}`);
+        const data=await res.json();
+        const cn=data?.[0]?.[0]?.[0]||'';
+        if(!cn)throw 0;
+        const res2=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=rm&q=${encodeURIComponent(cn)}`);
+        const data2=await res2.json();
+        const pinyin=data2?.[0]?.[0]?.[3]||'(กดฟังเสียงอ่าน)';
+        const entry={c:'ของฉัน',th,cn,read:pinyin};
+        const list=[...myPhrases,entry];
+        setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
+        setNewPhrase('');setAddMsg('แปลสำเร็จ (Google) · เพิ่มในหมวด ของฉัน');
+      }catch(e2){
+        setAddMsg('แปลไม่ได้ (ไม่มีเน็ต?) ลองใหม่ตอนมีสัญญาณ');
+      }
     }
     setAddBusy(false);setTimeout(()=>setAddMsg(''),4000);
   };
