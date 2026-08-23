@@ -5,6 +5,8 @@ import WeatherSection from './components/WeatherSection';
 import ItinerarySection from './components/ItinerarySection';
 import RouteSection from './components/RouteSection';
 import CurrencySection from './components/CurrencySection';
+import PackingSection from './components/PackingSection';
+import PhrasesSection from './components/PhrasesSection';
 
 function getDaysLeft(){
   const now=new Date();const start=new Date(2026,11,25);
@@ -18,6 +20,7 @@ function getDaysLeft(){
 export default function App(){
   const[openDay,setOpenDay]=useState(2);
   const[active,setActive]=useState('weather');
+  const[posterOpen,setPosterOpen]=useState(false);
   const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null)};
 
   const jumpTo=id=>{refs[id]?.current?.scrollIntoView({behavior:'smooth',block:'start'});};
@@ -33,22 +36,50 @@ export default function App(){
     return()=>window.removeEventListener('scroll',h);
   },[]);
 
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(180deg,#BFE6FF 0%,#E4F5FF 240px,#FFFFFF 560px)',position:'relative'}}>
+  return(<div style={{minHeight:'100vh',background:'linear-gradient(180deg,#BFE6FF 0%,#E4F5FF 300px,#FFFFFF 700px)',position:'relative'}}>
     <SnowEffect/>
     <div style={{maxWidth:480,margin:'0 auto',paddingBottom:60}}>
-      {/* Header */}
-      <div style={{padding:'48px 16px 0'}}>
-        <div style={{display:'flex',justifyContent:'space-between',fontSize:11,fontWeight:700,color:'var(--orange)'}}>
-          <span>Harbin Ice and Snow</span><span style={{color:'var(--pink)'}}>2026 — 27</span>
+
+      {/* Hero Header */}
+      <div style={{padding:'40px 16px 0',textAlign:'center'}}>
+        <div style={{fontSize:11,fontWeight:700,letterSpacing:'.06em',color:'var(--orange)'}}>
+          Harbin Ice and Snow Festival
         </div>
-        <div style={{height:10,borderRadius:999,margin:'10px 0 14px',background:'linear-gradient(90deg,var(--orange),var(--pink))'}}/>
-        <h1 style={{fontSize:34,lineHeight:1.2,margin:'0 0 8px',fontWeight:700,color:'var(--navy)'}}>Harbin ฮาใจ ❄️💗</h1>
-        <p style={{margin:0,fontSize:14,color:'rgba(43,58,85,.7)'}}>25 ธ.ค. – 1 ม.ค. · 8 วัน · 8 คน</p>
-        <div style={{display:'flex',gap:8,margin:'14px 0',flexWrap:'wrap'}}>
+        <h1 style={{fontSize:32,lineHeight:1.15,margin:'8px 0 6px',fontWeight:700,color:'var(--navy)'}}>
+          Harbin ฮาใจ ❄️🌨️⛄️💗
+        </h1>
+        <p style={{margin:0,fontSize:14,color:'rgba(43,58,85,.7)'}}>25 ธันวาคม 2026 – 1 มกราคม 2027</p>
+        <p style={{margin:'4px 0 0',fontSize:13,color:'rgba(43,58,85,.5)'}}>8 วัน · 8 คน · มหกรรมหิมะและน้ำแข็ง</p>
+
+        <div style={{display:'flex',gap:8,margin:'16px 0',flexWrap:'wrap',justifyContent:'center'}}>
           <span style={{background:'var(--orange-200)',color:'#C65A16',fontWeight:700,fontSize:12,padding:'6px 14px',borderRadius:999}}>{getDaysLeft()}</span>
-          <span style={{background:'#fff',border:'2px solid var(--orange-300)',color:'var(--orange-dk)',fontWeight:700,fontSize:12,padding:'5px 13px',borderRadius:999}}>หนาวสุด 28 ธ.ค.</span>
+          <span style={{background:'#fff',border:'2px solid var(--orange-300)',color:'var(--orange-dk)',fontWeight:700,fontSize:12,padding:'5px 13px',borderRadius:999}}>หนาวสุด 28 ธ.ค. (−31°)</span>
         </div>
-        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+      </div>
+
+      {/* Trip Poster */}
+      <div style={{padding:'12px 16px 0'}}>
+        <button onClick={()=>setPosterOpen(true)} style={{all:'unset',cursor:'zoom-in',display:'block',width:'100%',background:'#fff',border:'3px solid var(--ice)',borderRadius:20,padding:8,boxShadow:'0 10px 26px rgba(60,120,180,.14)'}}>
+          <img src="/trip-poster.jpg" alt="แผนเที่ยวฮาร์บิน 8 วัน" style={{display:'block',width:'100%',height:'auto',borderRadius:14}}/>
+        </button>
+        <p style={{margin:'8px 0 0',fontSize:12,textAlign:'center',color:'rgba(43,58,85,.5)'}}>แตะเพื่อดูภาพรวมเต็มจอ</p>
+      </div>
+
+      {/* Poster Fullscreen Modal */}
+      {posterOpen&&(
+        <div style={{position:'fixed',inset:0,zIndex:100,background:'rgba(10,30,60,.95)',display:'flex',flexDirection:'column'}} onClick={()=>setPosterOpen(false)}>
+          <div style={{flex:'none',display:'flex',justifyContent:'flex-end',padding:'50px 16px 10px'}}>
+            <button onClick={()=>setPosterOpen(false)} style={{all:'unset',cursor:'pointer',fontSize:14,fontWeight:700,color:'#fff',padding:'8px 16px',border:'2px solid rgba(255,255,255,.4)',borderRadius:999}}>ปิด ✕</button>
+          </div>
+          <div style={{flex:1,overflow:'auto',display:'flex',alignItems:'flex-start',justifyContent:'center',padding:'8px 12px 40px'}}>
+            <img src="/trip-poster.jpg" alt="แผนเที่ยวฮาร์บิน" style={{width:'200%',maxWidth:900,height:'auto',borderRadius:12}} onClick={e=>e.stopPropagation()}/>
+          </div>
+        </div>
+      )}
+
+      {/* Emergency Contacts */}
+      <div style={{padding:'16px 16px 0'}}>
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'center'}}>
           <a href='tel:110' style={{all:'unset',cursor:'pointer',fontSize:12,fontWeight:700,padding:'6px 14px',border:'2px solid var(--pink)',borderRadius:999,color:'var(--pink-dk)',background:'#fff'}}>☎ ตำรวจจีน 110</a>
           <a href='tel:+861065321749' style={{all:'unset',cursor:'pointer',fontSize:12,fontWeight:700,padding:'6px 14px',border:'2px solid var(--pink)',borderRadius:999,color:'var(--pink-dk)',background:'#fff'}}>☎ สถานทูตไทยปักกิ่ง</a>
         </div>
@@ -59,23 +90,15 @@ export default function App(){
       <div ref={refs.plan}><ItinerarySection openDay={openDay} setOpenDay={setOpenDay}/></div>
       <div ref={refs.route}><RouteSection/></div>
       <div ref={refs.fx}><CurrencySection/></div>
-      <div ref={refs.pack} style={{padding:'30px 16px 0'}}>
-        <h2 style={{fontSize:20,color:'var(--navy)',margin:'0 0 8px',fontWeight:700,display:'flex',alignItems:'center',gap:10}}>
-          <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:32,height:32,borderRadius:11,background:'var(--orange-200)',color:'var(--orange-dk)'}}><i className='ph-duotone ph-suitcase-rolling' style={{fontSize:17}}/></span>ของที่ต้องเตรียม
-        </h2>
-        <p style={{fontSize:13,color:'rgba(43,58,85,.6)'}}>เปิดใช้บนเครื่องของแต่ละคน (เพิ่มได้ภายหลัง)</p>
-      </div>
-      <div ref={refs.cn} style={{padding:'30px 16px 0'}}>
-        <h2 style={{fontSize:20,color:'var(--navy)',margin:'0 0 8px',fontWeight:700,display:'flex',alignItems:'center',gap:10}}>
-          <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:32,height:32,borderRadius:11,background:'var(--ice)',color:'#2C7BB8'}}><i className='ph-duotone ph-chats-circle' style={{fontSize:17}}/></span>ประโยคจีนที่ใช้บ่อย
-        </h2>
-        <p style={{fontSize:13,color:'rgba(43,58,85,.6)'}}>เปิดใช้บนเครื่องของแต่ละคน (เพิ่มได้ภายหลัง)</p>
-      </div>
+
+      <div ref={refs.pack}><PackingSection/></div>
+      <div ref={refs.cn}><PhrasesSection/></div>
 
       {/* Footer */}
-      <div style={{padding:'40px 16px 0'}}>
-        <div style={{display:'flex',justifyContent:'center',gap:10,fontSize:20,color:'#BFE6FF'}}>❄ ❄ ❄</div>
-        <p style={{textAlign:'center',margin:'10px 0 0',fontSize:12,fontWeight:700,color:'rgba(43,58,85,.4)'}}>Harbin · 2026 — 27</p>
+      <div style={{padding:'40px 16px 0',textAlign:'center'}}>
+        <div style={{fontSize:20,color:'#BFE6FF'}}>❄ ❄ ❄</div>
+        <p style={{margin:'10px 0 4px',fontSize:13,fontWeight:700,color:'rgba(43,58,85,.5)'}}>ขอให้ทริปนี้เต็มไปด้วยความสุข</p>
+        <p style={{margin:0,fontSize:11,fontWeight:700,letterSpacing:'.04em',color:'rgba(43,58,85,.35)'}}>Harbin · 25 ธ.ค. 2026 – 1 ม.ค. 2027</p>
       </div>
     </div>
   </div>);
