@@ -104,6 +104,7 @@ export default function App(){
         <p style={{margin:'10px 0 4px',fontSize:13,fontWeight:700,color:'rgba(43,58,85,.5)'}}>ขอให้ทริปนี้เต็มไปด้วยความสุข</p>
         <p style={{margin:0,fontSize:11,fontWeight:700,letterSpacing:'.04em',color:'rgba(43,58,85,.35)'}}>Harbin · 25 ธ.ค. 2026 – 1 ม.ค. 2027</p>
       </div>
+      <NavTabs active={active} onJump={jumpTo}/>
     </div>
   </div>);
 }
