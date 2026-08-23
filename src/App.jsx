@@ -7,6 +7,8 @@ import RouteSection from './components/RouteSection';
 import CurrencySection from './components/CurrencySection';
 import PackingSection from './components/PackingSection';
 import PhrasesSection from './components/PhrasesSection';
+import ExpenseSplitter from './components/ExpenseSplitter';
+import SOSCard from './components/SOSCard';
 
 function getDaysLeft(){
   const now=new Date();const start=new Date(2026,11,25);
@@ -21,7 +23,7 @@ export default function App(){
   const[openDay,setOpenDay]=useState(2);
   const[active,setActive]=useState('weather');
   const[posterOpen,setPosterOpen]=useState(false);
-  const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null)};
+  const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null),expense:useRef(null),sos:useRef(null)};
 
   const jumpTo=id=>{refs[id]?.current?.scrollIntoView({behavior:'smooth',block:'start'});};
 
@@ -93,6 +95,8 @@ export default function App(){
 
       <div ref={refs.pack}><PackingSection/></div>
       <div ref={refs.cn}><PhrasesSection/></div>
+      <div ref={refs.expense}><ExpenseSplitter/></div>
+      <div ref={refs.sos}><SOSCard/></div>
 
       {/* Footer */}
       <div style={{padding:'40px 16px 0',textAlign:'center'}}>
