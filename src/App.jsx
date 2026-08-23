@@ -38,9 +38,9 @@ export default function App(){
     return()=>window.removeEventListener('scroll',h);
   },[]);
 
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(180deg,#BFE6FF 0%,#E4F5FF 300px,#FFFFFF 700px)',position:'relative'}}>
+  return(<div style={{minHeight:'100vh',background:'linear-gradient(180deg,#BFE6FF 0%,#E4F5FF 300px,#FFFFFF 700px)',position:'relative',overflowX:'hidden'}}>
     <SnowEffect/>
-    <div style={{maxWidth:480,margin:'0 auto',paddingBottom:60}}>
+    <div style={{maxWidth:480,margin:'0 auto',paddingBottom:60,width:'100%'}}>
 
       {/* Hero Header */}
       <div style={{padding:'40px 16px 0',textAlign:'center'}}>
