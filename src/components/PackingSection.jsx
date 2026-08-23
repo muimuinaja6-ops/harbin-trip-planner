@@ -54,7 +54,7 @@ export default function PackingSection(){
         })}
       </div>
       <div style={{display:'flex',gap:8,marginTop:16}}>
-        <input value={newItem} onChange={e=>setNewItem(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addItem()} placeholder={`เพิ่มของของ${who}…`} style={{flex:1,fontFamily:"'Mitr',sans-serif",fontSize:15,padding:'9px 12px',background:'#fff',border:'2px solid var(--ice)',borderRadius:14,color:'var(--navy)'}}/>
+        <input value={newItem} onChange={e=>setNewItem(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addItem()} placeholder={`เพิ่มของ${who}…`} style={{flex:1,minWidth:0,fontFamily:"'Mitr',sans-serif",fontSize:14,padding:'9px 12px',background:'#fff',border:'2px solid var(--ice)',borderRadius:14,color:'var(--navy)'}}/>
         <button onClick={addItem} style={{all:'unset',cursor:'pointer',padding:'9px 18px',borderRadius:999,background:'var(--orange)',color:'#fff',fontSize:14,fontWeight:700}}>เพิ่ม</button>
       </div>
       <p style={{fontSize:12,lineHeight:1.6,color:'rgba(43,58,85,.55)',margin:'12px 0 0'}}>แต่ละคนมีรายการของตัวเอง เก็บไว้ในเครื่องของคนนั้น</p>
