@@ -58,8 +58,9 @@ export default function PhotoSpots() {
                   <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--navy)' }}>{spot.place}</div>
                   <div style={{ fontSize: 11, color: 'rgba(43,58,85,.45)' }}>{spot.day} · {spot.tips.length} มุมแนะนำ</div>
                 </div>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.q)}`} target='_blank' rel='noopener' onClick={e=>e.stopPropagation()} style={{ all: 'unset', cursor: 'pointer', fontSize: 11, fontWeight: 700, padding: '5px 10px', border: '2px solid var(--ice)', borderRadius: 999, color: 'var(--navy)', background: '#fff' }}>📍 แผนที่</a>
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <a href={`https://uri.amap.com/search?keyword=${encodeURIComponent(spot.q)}`} target='_blank' rel='noopener' onClick={e=>e.stopPropagation()} style={{ all: 'unset', cursor: 'pointer', fontSize: 11, fontWeight: 700, padding: '5px 10px', border: '2px solid #219C7D', borderRadius: 999, color: '#219C7D', background: '#fff' }}>高德</a>
+                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.q)}`} target='_blank' rel='noopener' onClick={e=>e.stopPropagation()} style={{ all: 'unset', cursor: 'pointer', fontSize: 11, fontWeight: 700, padding: '5px 10px', border: '2px solid var(--ice)', borderRadius: 999, color: 'var(--navy)', background: '#fff' }}>Google</a>
                   <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--pink-dk)' }}>{isOpen ? '▲' : '▼'}</span>
                 </div>
               </div>
