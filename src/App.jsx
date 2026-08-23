@@ -87,7 +87,6 @@ export default function App(){
         </div>
       </div>
 
-      <NavTabs active={active} onJump={jumpTo}/>
       <div ref={refs.weather}><WeatherSection onDaySelect={i=>setOpenDay(i)}/></div>
       <div ref={refs.plan}><ItinerarySection openDay={openDay} setOpenDay={setOpenDay}/></div>
       <div ref={refs.route}><RouteSection/></div>
