@@ -4,7 +4,26 @@ export default function CurrencySection(){
   const[rate,setRate]=useState(()=>localStorage.getItem('harbin-rate')||'4.88');
   const[fxDir,setFxDir]=useState(()=>localStorage.getItem('harbin-fxdir')||'thb2cny');
   const[fxStatus,setFxStatus]=useState('loading');
-  useEffect(()=>{fetch('https://open.er-api.com/v6/latest/CNY').then(r=>r.json()).then(d=>{const t=d?.rates?.THB;if(!t)throw 0;const v=t.toFixed(2);localStorage.setItem('harbin-rate',v);setRate(v);setFxStatus('live');}).catch(()=>setFxStatus('offline'));},[]);
+  useEffect(()=>{
+    // Try Google Finance first (unofficial but accurate)
+    fetch('https://www.google.com/finance/quote/CNY-THB')
+      .then(r=>r.text())
+      .then(html=>{
+        // Google Finance page contains the rate in a data attribute
+        const match=html.match(/data-last-price="([\d.]+)"/);
+        if(match){
+          const v=parseFloat(match[1]).toFixed(2);
+          localStorage.setItem('harbin-rate',v);setRate(v);setFxStatus('live');
+        } else throw new Error('parse failed');
+      })
+      .catch(()=>{
+        // Fallback to Open Exchange Rates (free, no key)
+        fetch('https://open.er-api.com/v6/latest/CNY')
+          .then(r=>r.json())
+          .then(d=>{const t=d?.rates?.THB;if(!t)throw 0;const v=t.toFixed(2);localStorage.setItem('harbin-rate',v);setRate(v);setFxStatus('live');})
+          .catch(()=>setFxStatus('offline'));
+      });
+  },[]);
   const toCny=fxDir==='thb2cny';const rateNum=parseFloat(rate)||4.88;const thbNum=parseFloat(String(thb).replace(/,/g,''))||0;
   const cnyTxt=(toCny?thbNum/rateNum:thbNum*rateNum).toLocaleString('en-US',{maximumFractionDigits:2});
   const handleThb=e=>{const v=e.target.value.replace(/[^0-9.]/g,'').replace(/(\..*)\.$/,'$1');setThb(v);};
