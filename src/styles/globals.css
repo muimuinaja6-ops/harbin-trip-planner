@@ -1,0 +1,8 @@
+:root{--orange:#FF8A3D;--orange-dk:#E86A1D;--orange-100:#FFF1E2;--orange-200:#FFE0C2;--orange-300:#FFC48C;--pink:#FF6F91;--pink-dk:#E14D72;--pink-100:#FFE3EA;--navy:#2B3A55;--ice:#D8ECFB;--ice-light:#EAF7FF;--white:#fff}
+body{margin:0;background:#BFE6FF;font-family:'Mitr',sans-serif;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes snowfall{0%{transform:translateY(-24px) translateX(0)}100%{transform:translateY(100vh) translateX(18px)}}
+@keyframes snowdrift{0%,100%{opacity:.9}50%{opacity:.4}}
+@keyframes snowspin{from{rotate:0deg}to{rotate:360deg}}
+a{color:var(--orange);text-decoration:none}
+input{outline:none}input:focus{border-color:var(--orange)!important}
