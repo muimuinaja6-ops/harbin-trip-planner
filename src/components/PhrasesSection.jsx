@@ -30,13 +30,29 @@ export default function PhrasesSection(){
 
   const addPhrase=async()=>{
     const th=newPhrase.trim();if(!th||addBusy)return;
-    setAddBusy(true);setAddMsg('กำลังเพิ่ม…');
-    // Simple add without translation (no AI API available in static deploy)
-    const entry={c:'ของฉัน',th,cn:'(พิมพ์เอง)',read:''};
-    const list=[...myPhrases,entry];
-    setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
-    setNewPhrase('');setAddBusy(false);setAddMsg('เพิ่มแล้ว · อยู่ในหมวด ของฉัน');
-    setTimeout(()=>setAddMsg(''),3000);
+    setAddBusy(true);setAddMsg('กำลังแปล…');
+    try {
+      // Use Google Translate (unofficial free endpoint) to get Chinese
+      const res=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=th&tl=zh-CN&dt=t&q=${encodeURIComponent(th)}`);
+      const data=await res.json();
+      const cn=data?.[0]?.[0]?.[0]||'';
+      if(!cn)throw new Error('no translation');
+      // Get pinyin/romanization for pronunciation guide
+      const res2=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=th&dt=rm&q=${encodeURIComponent(cn)}`);
+      const data2=await res2.json();
+      const pinyin=data2?.[0]?.[0]?.[3]||'';
+      const entry={c:'ของฉัน',th,cn,read:pinyin};
+      const list=[...myPhrases,entry];
+      setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
+      setNewPhrase('');setAddMsg('แปลสำเร็จ · เพิ่มในหมวด ของฉัน');
+    } catch(e) {
+      // Fallback: add without translation
+      const entry={c:'ของฉัน',th,cn:th,read:''};
+      const list=[...myPhrases,entry];
+      setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
+      setNewPhrase('');setAddMsg('แปลไม่ได้ (เน็ตหลุด?) เพิ่มเป็นภาษาไทยไว้ก่อน');
+    }
+    setAddBusy(false);setTimeout(()=>setAddMsg(''),4000);
   };
 
   return(<div style={{padding:'30px 16px 0'}}>
