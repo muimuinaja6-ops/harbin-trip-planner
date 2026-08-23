@@ -37,11 +37,23 @@ export default function PhrasesSection(){
       const data=await res.json();
       const cn=data?.[0]?.[0]?.[0]||'';
       if(!cn)throw new Error('no translation');
-      // Get pinyin/romanization for pronunciation guide
-      const res2=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=th&dt=rm&q=${encodeURIComponent(cn)}`);
+      // Get Thai pronunciation: translate Chinese to Thai with transliteration param
+      const res2=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=th&dt=rm&dt=t&q=${encodeURIComponent(cn)}`);
       const data2=await res2.json();
       const pinyin=data2?.[0]?.[0]?.[3]||'';
-      const entry={c:'ของฉัน',th,cn,read:pinyin};
+      // Convert pinyin to Thai readable text via Google Translate
+      let thaiRead=pinyin;
+      if(pinyin){
+        try{
+          const res3=await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=th&dt=rm&dt=at&q=${encodeURIComponent(cn)}`);
+          const data3=await res3.json();
+          // Try to get Thai transliteration from alternative translations
+          const alt=data3?.[5]?.[0]?.[2]?.[0]?.[0]||'';
+          if(alt&&/[\u0e00-\u0e7f]/.test(alt))thaiRead=alt;
+          else thaiRead=pinyin;
+        }catch(e){thaiRead=pinyin;}
+      }
+      const entry={c:'ของฉัน',th,cn,read:thaiRead};
       const list=[...myPhrases,entry];
       setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
       setNewPhrase('');setAddMsg('แปลสำเร็จ · เพิ่มในหมวด ของฉัน');
