@@ -98,6 +98,7 @@ const TABS = [
   { id: 'cn', label: 'จีน', Icon: IconChinese },
   { id: 'tips', label: 'เทคนิค', Icon: IconTips },
   { id: 'photo', label: 'รูป', Icon: IconPhoto },
+  { id: 'gallery', label: 'แกลเลอรี', Icon: IconPhoto },
   { id: 'expense', label: 'หาร', Icon: IconExpense },
   { id: 'sos', label: 'SOS', Icon: IconSOS },
 ];
