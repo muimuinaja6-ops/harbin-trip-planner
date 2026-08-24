@@ -4,6 +4,7 @@ import NavTabs from './components/NavTabs';
 import WeatherSection from './components/WeatherSection';
 import ItinerarySection from './components/ItinerarySection';
 import RouteSection from './components/RouteSection';
+import AmapSection from './components/AmapSection';
 import CurrencySection from './components/CurrencySection';
 import PackingSection from './components/PackingSection';
 import PhrasesSection from './components/PhrasesSection';
@@ -25,7 +26,7 @@ export default function App(){
   const[openDay,setOpenDay]=useState(2);
   const[active,setActive]=useState('weather');
   const[posterOpen,setPosterOpen]=useState(false);
-  const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null),tips:useRef(null),photo:useRef(null),expense:useRef(null),sos:useRef(null)};
+  const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),amap:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null),tips:useRef(null),photo:useRef(null),expense:useRef(null),sos:useRef(null)};
 
   const jumpTo=id=>{refs[id]?.current?.scrollIntoView({behavior:'smooth',block:'start'});};
 
@@ -92,6 +93,7 @@ export default function App(){
       <div ref={refs.weather}><WeatherSection onDaySelect={i=>setOpenDay(i)}/></div>
       <div ref={refs.plan}><ItinerarySection openDay={openDay} setOpenDay={setOpenDay}/></div>
       <div ref={refs.route}><RouteSection/></div>
+      <div ref={refs.amap}><AmapSection/></div>
       <div ref={refs.fx}><CurrencySection/></div>
 
       <div ref={refs.pack}><PackingSection/></div>

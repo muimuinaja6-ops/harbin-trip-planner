@@ -11,14 +11,28 @@ export default function ExpenseSplitter() {
   const [amount, setAmount] = useState('');
   const [payer, setPayer] = useState(TEAM[0].name);
   const [splitAmong, setSplitAmong] = useState(TEAM.map(t => t.name));
+  const [errors, setErrors] = useState({});
 
   useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }, [expenses]);
 
-  const addExpense = () => {
+  const validate = () => {
+    const errs = {};
+    if (!desc.trim()) errs.desc = 'กรุณาระบุรายการ';
+    else if (desc.trim().length > 50) errs.desc = 'ชื่อรายการยาวเกินไป (ไม่เกิน 50 ตัว)';
     const amt = parseFloat(amount);
-    if (!desc.trim() || !amt || amt <= 0 || splitAmong.length === 0) return;
+    if (!amount.trim()) errs.amount = 'กรุณาใส่จำนวนเงิน';
+    else if (isNaN(amt) || amt <= 0) errs.amount = 'จำนวนเงินต้องมากกว่า 0';
+    else if (amt > 999999) errs.amount = 'จำนวนเงินมากเกินไป';
+    if (splitAmong.length === 0) errs.split = 'เลือกอย่างน้อย 1 คนที่ร่วมหาร';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const addExpense = () => {
+    if (!validate()) return;
+    const amt = parseFloat(amount);
     setExpenses([...expenses, { id: Date.now(), desc: desc.trim(), amount: amt, payer, splitAmong: [...splitAmong], date: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) }]);
-    setDesc(''); setAmount('');
+    setDesc(''); setAmount(''); setErrors({});
   };
 
   const removeExpense = (id) => setExpenses(expenses.filter(e => e.id !== id));
@@ -47,10 +61,14 @@ export default function ExpenseSplitter() {
 
         {/* Add expense form */}
         <div style={{ marginBottom: 16 }}>
-          <input value={desc} onChange={e => setDesc(e.target.value)} placeholder="จ่ายอะไร เช่น ค่าแท็กซี่" style={{ width: '100%', boxSizing: 'border-box', fontFamily: "'Mitr',sans-serif", fontSize: 15, padding: '9px 12px', background: '#fff', border: '2px solid var(--ice)', borderRadius: 14, color: 'var(--navy)', marginBottom: 8 }} />
+          <input value={desc} onChange={e => { setDesc(e.target.value); if (errors.desc) setErrors(prev => ({ ...prev, desc: undefined })); }} placeholder="จ่ายอะไร เช่น ค่าแท็กซี่" style={{ width: '100%', boxSizing: 'border-box', fontFamily: "'Mitr',sans-serif", fontSize: 15, padding: '9px 12px', background: '#fff', border: `2px solid ${errors.desc ? '#e74c3c' : 'var(--ice)'}`, borderRadius: 14, color: 'var(--navy)', marginBottom: errors.desc ? 4 : 8, transition: 'border-color .2s' }} />
+          {errors.desc && <p style={{ margin: '0 0 8px', fontSize: 11, color: '#e74c3c', fontWeight: 600 }}>{errors.desc}</p>}
           <div style={{ display: 'flex', gap: 8 }}>
-            <input value={amount} onChange={e => setAmount(e.target.value.replace(/[^0-9.]/g, ''))} inputMode='decimal' placeholder="จำนวนเงิน (หยวน)" style={{ flex: 1, fontFamily: "'Baloo 2',sans-serif", fontSize: 16, fontWeight: 700, padding: '9px 12px', background: '#fff', border: '2px solid var(--ice)', borderRadius: 14, color: 'var(--navy)' }} />
-            <button onClick={addExpense} style={{ all: 'unset', cursor: 'pointer', padding: '9px 18px', borderRadius: 999, background: 'var(--orange)', color: '#fff', fontSize: 14, fontWeight: 700 }}>เพิ่ม</button>
+            <div style={{ flex: 1 }}>
+              <input value={amount} onChange={e => { setAmount(e.target.value.replace(/[^0-9.]/g, '')); if (errors.amount) setErrors(prev => ({ ...prev, amount: undefined })); }} inputMode='decimal' placeholder="จำนวนเงิน (หยวน)" style={{ width: '100%', boxSizing: 'border-box', fontFamily: "'Baloo 2',sans-serif", fontSize: 16, fontWeight: 700, padding: '9px 12px', background: '#fff', border: `2px solid ${errors.amount ? '#e74c3c' : 'var(--ice)'}`, borderRadius: 14, color: 'var(--navy)', transition: 'border-color .2s' }} />
+              {errors.amount && <p style={{ margin: '4px 0 0', fontSize: 11, color: '#e74c3c', fontWeight: 600 }}>{errors.amount}</p>}
+            </div>
+            <button onClick={addExpense} style={{ all: 'unset', cursor: 'pointer', padding: '9px 18px', borderRadius: 999, background: 'var(--orange)', color: '#fff', fontSize: 14, fontWeight: 700, alignSelf: 'flex-start' }}>เพิ่ม</button>
           </div>
         </div>
 
@@ -63,10 +81,10 @@ export default function ExpenseSplitter() {
         </div>
 
         {/* Split among */}
-        <div style={{ fontSize: 12, fontWeight: 700, color: 'rgba(43,58,85,.6)', marginBottom: 6 }}>หารกับใคร</div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: errors.split ? '#e74c3c' : 'rgba(43,58,85,.6)', marginBottom: 6 }}>หารกับใคร {errors.split && <span style={{ fontWeight: 600 }}>— {errors.split}</span>}</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
           {TEAM.map(t => (
-            <button key={t.name} onClick={() => toggleSplit(t.name)} style={{ all: 'unset', cursor: 'pointer', fontSize: 12, fontWeight: 700, padding: '5px 12px', border: `2px solid ${splitAmong.includes(t.name) ? '#219C7D' : 'var(--ice)'}`, borderRadius: 999, background: splitAmong.includes(t.name) ? '#D8F7EE' : '#fff', color: splitAmong.includes(t.name) ? '#219C7D' : 'rgba(43,58,85,.4)' }}>{t.name}</button>
+            <button key={t.name} onClick={() => { toggleSplit(t.name); if (errors.split) setErrors(prev => ({ ...prev, split: undefined })); }} style={{ all: 'unset', cursor: 'pointer', fontSize: 12, fontWeight: 700, padding: '5px 12px', border: `2px solid ${splitAmong.includes(t.name) ? '#219C7D' : 'var(--ice)'}`, borderRadius: 999, background: splitAmong.includes(t.name) ? '#D8F7EE' : '#fff', color: splitAmong.includes(t.name) ? '#219C7D' : 'rgba(43,58,85,.4)' }}>{t.name}</button>
           ))}
         </div>
 
