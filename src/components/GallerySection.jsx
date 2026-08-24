@@ -65,7 +65,11 @@ export default function GallerySection() {
         {/* Photo grid */}
         {photos.length > 0 && (
           <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-            {[2,3,4].map(n=>(<button key={n} onClick={()=>setCols(n)} style={{all:'unset',cursor:'pointer',fontSize:11,fontWeight:700,padding:'5px 10px',border:`2px solid ${cols===n?'var(--orange)':'var(--ice)'}`,borderRadius:999,background:cols===n?'var(--orange)':'#fff',color:cols===n?'#fff':'var(--navy)'}}>{n} col</button>))}
+            {[2,3,4].map(n=>(
+              <button key={n} onClick={()=>setCols(n)} style={{all:'unset',cursor:'pointer',padding:6,borderRadius:8,border:`2px solid ${cols===n?'var(--orange)':'var(--ice)'}`,background:cols===n?'var(--orange-100)':'#fff',display:'grid',gridTemplateColumns:`repeat(${n},1fr)`,gap:2,width:28,height:28}}>
+                {Array.from({length:n*n}).map((_,i)=>(<span key={i} style={{width:'100%',paddingBottom:'100%',borderRadius:2,background:cols===n?'var(--orange)':'var(--ice)'}}/>))}
+              </button>
+            ))}
           </div>
         )}
         {photos.length === 0 ? (
