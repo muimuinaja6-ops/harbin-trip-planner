@@ -87,6 +87,7 @@ export default function App(){
         <div style={{display:'flex',gap:8,flexWrap:'wrap',justifyContent:'center'}}>
           <a href='tel:110' style={{all:'unset',cursor:'pointer',fontSize:12,fontWeight:700,padding:'6px 14px',border:'2px solid var(--pink)',borderRadius:999,color:'var(--pink-dk)',background:'#fff'}}>☎ ตำรวจจีน 110</a>
           <a href='tel:+861065321749' style={{all:'unset',cursor:'pointer',fontSize:12,fontWeight:700,padding:'6px 14px',border:'2px solid var(--pink)',borderRadius:999,color:'var(--pink-dk)',background:'#fff'}}>☎ สถานทูตไทยปักกิ่ง</a>
+          <a href='https://open.spotify.com/track/4oSKwpMCMlUZCYJMi2vVRQ' target='_blank' rel='noopener' style={{all:'unset',cursor:'pointer',fontSize:12,fontWeight:700,padding:'6px 14px',border:'2px solid #1DB954',borderRadius:999,color:'#1DB954',background:'#fff'}}>♫ Spring Snow</a>
         </div>
       </div>
 
