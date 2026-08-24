@@ -16,6 +16,11 @@ function openAmap(query) {
   window.open(url, '_blank', 'noopener');
 }
 
+function openBaidu(query) {
+  const url = `https://map.baidu.com/search/${encodeURIComponent(query)}`;
+  window.open(url, '_blank', 'noopener');
+}
+
 function copyToClipboard(text) {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text);
@@ -120,7 +125,27 @@ export default function AmapSection() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '12px 18px',
+            padding: '12px 14px',
+            borderRadius: 16,
+            background: '#3385FF',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: 13,
+            whiteSpace: 'nowrap',
+          }}
+          onClick={(e) => { e.preventDefault(); if(search.trim()){setError('');openBaidu(search.trim());}else{setError('กรุณาพิมพ์ชื่อสถานที่');} }}
+        >
+          百度
+        </button>
+        <button
+          type="submit"
+          style={{
+            all: 'unset',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '12px 14px',
             borderRadius: 16,
             background: '#219C7D',
             color: '#fff',
@@ -129,7 +154,7 @@ export default function AmapSection() {
             whiteSpace: 'nowrap',
           }}
         >
-          เปิด Amap
+          高德
         </button>
       </form>
       {error && (
@@ -196,6 +221,25 @@ export default function AmapSection() {
                 }}
               >
                 {copied === i ? 'คัดลอกแล้ว' : 'คัดลอก'}
+              </button>
+
+              {/* Open Baidu button */}
+              <button
+                onClick={() => openBaidu(place.query)}
+                style={{
+                  all: 'unset',
+                  cursor: 'pointer',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: '6px 10px',
+                  borderRadius: 999,
+                  border: '2px solid #3385FF',
+                  color: '#3385FF',
+                  background: '#fff',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                百度
               </button>
 
               {/* Open Amap button */}
