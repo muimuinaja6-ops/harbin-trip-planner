@@ -6,6 +6,7 @@ export default function GallerySection() {
   const [uploading, setUploading] = useState(false);
   const [viewPhoto, setViewPhoto] = useState(null);
   const [who] = useState('Harbin-Hajai');
+  const [cols, setCols] = useState(3);
   const fileRef = useRef(null);
 
   // Sync photos list from Firebase Realtime DB
@@ -62,10 +63,15 @@ export default function GallerySection() {
         </div>
 
         {/* Photo grid */}
+        {photos.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+            {[2,3,4].map(n=>(<button key={n} onClick={()=>setCols(n)} style={{all:'unset',cursor:'pointer',fontSize:11,fontWeight:700,padding:'5px 10px',border:`2px solid ${cols===n?'var(--orange)':'var(--ice)'}`,borderRadius:999,background:cols===n?'var(--orange)':'#fff',color:cols===n?'#fff':'var(--navy)'}}>{n} col</button>))}
+          </div>
+        )}
         {photos.length === 0 ? (
           <p style={{ fontSize: 13, color: 'rgba(43,58,85,.5)', textAlign: 'center', padding: '20px 0' }}>ยังไม่มีรูป กดอัปรูปแรกของทริปเลย</p>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 6 }}>
             {photos.map((p, i) => (
               <div key={p._key || i} onClick={() => setViewPhoto(p)} style={{ cursor: 'pointer', position: 'relative', paddingBottom: '100%', borderRadius: 10, overflow: 'hidden', background: 'var(--ice)' }}>
                 <img src={p.url} alt="" loading="lazy" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
