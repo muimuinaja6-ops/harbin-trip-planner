@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import TEAM from '../data/team';
-
-const STORAGE_KEY = 'harbin-expenses';
+import {db,ref,onValue,push,remove} from '../firebase';
 
 export default function ExpenseSplitter() {
-  const [expenses, setExpenses] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
-  });
+  const [expenses, setExpenses] = useState([]);
   const [desc, setDesc] = useState('');
   const [amount, setAmount] = useState('');
   const [payer, setPayer] = useState(TEAM[0].name);
   const [splitAmong, setSplitAmong] = useState(TEAM.map(t => t.name));
   const [errors, setErrors] = useState({});
 
-  useEffect(() => { localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }, [expenses]);
+  // Sync expenses from Firebase realtime
+  useEffect(()=>{
+    const expRef=ref(db,'shared/expenses');
+    return onValue(expRef,(snap)=>{
+      const data=snap.val();
+      if(data){setExpenses(Object.entries(data).map(([key,val])=>({...val,_key:key})));}
+      else{setExpenses([]);}
+    });
+  },[]);
+
 
   const validate = () => {
     const errs = {};
@@ -31,11 +37,11 @@ export default function ExpenseSplitter() {
   const addExpense = () => {
     if (!validate()) return;
     const amt = parseFloat(amount);
-    setExpenses([...expenses, { id: Date.now(), desc: desc.trim(), amount: amt, payer, splitAmong: [...splitAmong], date: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) }]);
+    push(ref(db,'shared/expenses'),{ id: Date.now(), desc: desc.trim(), amount: amt, payer, splitAmong: [...splitAmong], date: new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) });
     setDesc(''); setAmount(''); setErrors({});
   };
 
-  const removeExpense = (id) => setExpenses(expenses.filter(e => e.id !== id));
+  const removeExpense = (id) => { const item=expenses.find(e=>e.id===id); if(item&&item._key)remove(ref(db,'shared/expenses/'+item._key)); };
 
   const toggleSplit = (name) => {
     setSplitAmong(prev => prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]);

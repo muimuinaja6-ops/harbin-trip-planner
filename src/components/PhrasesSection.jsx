@@ -1,15 +1,26 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import PHRASES from '../data/phrases';
+import {db,ref,onValue,push,remove} from '../firebase';
 
 const CATS=['ทั้งหมด','กิน','ซื้อของ','เดินทาง','ฉุกเฉิน','ทั่วไป','ของฉัน'];
 
 export default function PhrasesSection(){
   const[cat,setCat]=useState('ทั้งหมด');
   const[openPhrase,setOpenPhrase]=useState(null);
-  const[myPhrases,setMyPhrases]=useState(()=>{try{return JSON.parse(localStorage.getItem('harbin-phrases')||'[]');}catch{return[];}});
+  const[myPhrases,setMyPhrases]=useState([]);
   const[newPhrase,setNewPhrase]=useState('');
   const[addBusy,setAddBusy]=useState(false);
   const[addMsg,setAddMsg]=useState('');
+
+  // Sync custom phrases from Firebase realtime
+  useEffect(()=>{
+    const phrasesRef=ref(db,'shared/phrases');
+    return onValue(phrasesRef,(snap)=>{
+      const data=snap.val();
+      if(data){setMyPhrases(Object.entries(data).map(([key,val])=>({...val,_key:key})));}
+      else{setMyPhrases([]);}
+    });
+  },[]);
 
   const allPhrases=[...PHRASES,...myPhrases];
   const filtered=allPhrases.filter(p=>cat==='ทั้งหมด'||p.c===cat);
@@ -24,8 +35,9 @@ export default function PhrasesSection(){
 
   const removePhrase=(globalIdx)=>{
     const localIdx=globalIdx-PHRASES.length;if(localIdx<0)return;
-    const next=myPhrases.filter((_,j)=>j!==localIdx);
-    setMyPhrases(next);localStorage.setItem('harbin-phrases',JSON.stringify(next));setOpenPhrase(null);
+    const item=myPhrases[localIdx];
+    if(item&&item._key){remove(ref(db,'shared/phrases/'+item._key));}
+    setOpenPhrase(null);
   };
 
   // Pinyin to Thai approximation map
@@ -61,8 +73,8 @@ export default function PhrasesSection(){
         if(pinyin)thaiRead=pinyinToThai(pinyin);
       }catch(e){}
       const entry={c:'ของฉัน',th,cn,read:thaiRead||'(กดฟังเสียงอ่าน)'};
-      const list=[...myPhrases,entry];
-      setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
+      
+      push(ref(db,'shared/phrases'),entry);
       setNewPhrase('');setAddMsg('แปลสำเร็จ · เพิ่มในหมวด ของฉัน');
     } catch(e) {
       // Fallback: try Google Translate (needs VPN in China)
@@ -75,8 +87,8 @@ export default function PhrasesSection(){
         const data2=await res2.json();
         const pinyin=data2?.[0]?.[0]?.[3]||'(กดฟังเสียงอ่าน)';
         const entry={c:'ของฉัน',th,cn,read:pinyinToThai(pinyin)||pinyin};
-        const list=[...myPhrases,entry];
-        setMyPhrases(list);localStorage.setItem('harbin-phrases',JSON.stringify(list));
+        
+        push(ref(db,'shared/phrases'),entry);
         setNewPhrase('');setAddMsg('แปลสำเร็จ (Google) · เพิ่มในหมวด ของฉัน');
       }catch(e2){
         setAddMsg('แปลไม่ได้ (ไม่มีเน็ต?) ลองใหม่ตอนมีสัญญาณ');
