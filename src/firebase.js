@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, set, push, remove } from 'firebase/database';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBEDQrVf-Mo0HB9bFypjqkqtzgwtrN4WW0",
@@ -13,6 +14,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 // One-time migration: push localStorage data to Firebase (runs once per device)
 function migrateLocalToFirebase() {
@@ -42,4 +44,4 @@ function migrateLocalToFirebase() {
 }
 migrateLocalToFirebase();
 
-export { db, ref, onValue, set, push, remove };
+export { db, ref, onValue, set, push, remove, storage, storageRef, uploadBytes, getDownloadURL, listAll };

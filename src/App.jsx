@@ -13,6 +13,7 @@ import ExpenseSplitter from './components/ExpenseSplitter';
 import SOSCard from './components/SOSCard';
 import TipsSection from './components/TipsSection';
 import PhotoSpots from './components/PhotoSpots';
+import GallerySection from './components/GallerySection';
 
 function getDaysLeft(){
   const now=new Date();const start=new Date(2026,11,25);
@@ -27,7 +28,7 @@ export default function App(){
   const[openDay,setOpenDay]=useState(2);
   const[active,setActive]=useState('weather');
   const[posterOpen,setPosterOpen]=useState(false);
-  const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),amap:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null),tips:useRef(null),photo:useRef(null),expense:useRef(null),sos:useRef(null)};
+  const refs={weather:useRef(null),plan:useRef(null),route:useRef(null),amap:useRef(null),fx:useRef(null),pack:useRef(null),cn:useRef(null),tips:useRef(null),photo:useRef(null),gallery:useRef(null),expense:useRef(null),sos:useRef(null)};
 
   const jumpTo=id=>{refs[id]?.current?.scrollIntoView({behavior:'smooth',block:'start'});};
 
@@ -102,6 +103,7 @@ export default function App(){
       <div ref={refs.cn}><PhrasesSection/></div>
       <div ref={refs.tips}><TipsSection/></div>
       <div ref={refs.photo}><PhotoSpots/></div>
+      <div ref={refs.gallery}><GallerySection/></div>
       <div ref={refs.expense}><ExpenseSplitter/></div>
       <div ref={refs.sos}><SOSCard/></div>
 
