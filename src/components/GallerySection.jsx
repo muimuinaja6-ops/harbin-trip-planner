@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, ref, onValue, push, storage, storageRef, uploadBytes, getDownloadURL } from '../firebase';
-import TEAM from '../data/team';
 
 export default function GallerySection() {
   const [photos, setPhotos] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [viewPhoto, setViewPhoto] = useState(null);
-  const [who, setWho] = useState(() => localStorage.getItem('harbin-who') || TEAM[0].name);
+  const [who] = useState('Harbin-Hajai');
   const fileRef = useRef(null);
 
   // Sync photos list from Firebase Realtime DB
