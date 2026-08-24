@@ -90,7 +90,7 @@ export default function AmapSection() {
         Baidu/Amap ค้นหา
       </h2>
       <p style={{ margin: '8px 0 16px', fontSize: 12, color: 'rgba(43,58,85,.55)' }}>
-        พิมพ์ภาษาไทย/อังกฤษ แล้วเปิดใน Amap (高德地图) ได้เลย
+        พิมพ์ภาษาไทย/อังกฤษ แล้วเปิดใน Baidu/Amap ได้เลย
       </p>
 
       {/* Search Box */}
@@ -135,7 +135,7 @@ export default function AmapSection() {
           }}
           onClick={(e) => { e.preventDefault(); if(search.trim()){setError('');openBaidu(search.trim());}else{setError('กรุณาพิมพ์ชื่อสถานที่');} }}
         >
-          百度
+          Baidu
         </button>
         <button
           type="submit"
@@ -154,7 +154,7 @@ export default function AmapSection() {
             whiteSpace: 'nowrap',
           }}
         >
-          高德
+          Amap
         </button>
       </form>
       {error && (
@@ -239,7 +239,7 @@ export default function AmapSection() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                百度
+                Baidu
               </button>
 
               {/* Open Amap button */}
@@ -258,7 +258,7 @@ export default function AmapSection() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                高德
+                Amap
               </button>
             </div>
           ))}

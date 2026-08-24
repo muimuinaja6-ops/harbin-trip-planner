@@ -92,7 +92,7 @@ const TABS = [
   { id: 'weather', label: 'อากาศ', Icon: IconWeather },
   { id: 'plan', label: 'แผน', Icon: IconPlan },
   { id: 'route', label: 'เส้นทาง', Icon: IconRoute },
-  { id: 'amap', label: 'Amap', Icon: IconAmap },
+  { id: 'amap', label: 'แผนที่', Icon: IconAmap },
   { id: 'fx', label: 'เงิน', Icon: IconMoney },
   { id: 'pack', label: 'เตรียม', Icon: IconPack },
   { id: 'cn', label: 'จีน', Icon: IconChinese },
