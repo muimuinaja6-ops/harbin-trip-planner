@@ -79,12 +79,23 @@ export default function GallerySection() {
 
       {/* Fullscreen viewer */}
       {viewPhoto && (
-        <div onClick={() => setViewPhoto(null)} style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-          <div style={{ flex: 'none', width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0 12px' }}>
-            <span style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{viewPhoto.by} · {viewPhoto.date}</span>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,.92)', display: 'flex', flexDirection: 'column', padding: 16 }}>
+          <div style={{ flex: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 0 12px' }}>
+            <span style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{viewPhoto.by} · {viewPhoto.date} · {photos.indexOf(viewPhoto)+1}/{photos.length}</span>
             <button onClick={() => setViewPhoto(null)} style={{ all: 'unset', cursor: 'pointer', fontSize: 14, fontWeight: 700, color: '#fff', padding: '6px 12px', border: '2px solid rgba(255,255,255,.4)', borderRadius: 999 }}>ปิด</button>
           </div>
-          <img src={viewPhoto.url} alt="" style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: 12, objectFit: 'contain' }} onClick={e => e.stopPropagation()} />
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            {/* Prev button */}
+            {photos.indexOf(viewPhoto) > 0 && (
+              <button onClick={(e) => { e.stopPropagation(); setViewPhoto(photos[photos.indexOf(viewPhoto)-1]); }} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', fontSize: 28, color: '#fff', padding: '20px 12px', zIndex: 1 }}>‹</button>
+            )}
+            <img src={viewPhoto.url} alt="" style={{ maxWidth: '100%', maxHeight: '80vh', borderRadius: 12, objectFit: 'contain' }} onClick={(e) => { e.stopPropagation(); const idx=photos.indexOf(viewPhoto); if(idx<photos.length-1)setViewPhoto(photos[idx+1]); }} />
+            {/* Next button */}
+            {photos.indexOf(viewPhoto) < photos.length-1 && (
+              <button onClick={(e) => { e.stopPropagation(); setViewPhoto(photos[photos.indexOf(viewPhoto)+1]); }} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', fontSize: 28, color: '#fff', padding: '20px 12px', zIndex: 1 }}>›</button>
+            )}
+          </div>
+          <div style={{ flex: 'none', textAlign: 'center', paddingTop: 10, fontSize: 11, color: 'rgba(255,255,255,.5)' }}>แตะรูปเพื่อดูรูปถัดไป หรือกด ‹ › เปลี่ยนรูป</div>
         </div>
       )}
     </div>
