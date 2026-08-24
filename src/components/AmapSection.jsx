@@ -87,7 +87,7 @@ export default function AmapSection() {
             <circle cx="12" cy="9" r="2.5"/>
           </svg>
         </span>
-        Amap ค้นหา
+        Baidu/Amap ค้นหา
       </h2>
       <p style={{ margin: '8px 0 16px', fontSize: 12, color: 'rgba(43,58,85,.55)' }}>
         พิมพ์ภาษาไทย/อังกฤษ แล้วเปิดใน Amap (高德地图) ได้เลย
