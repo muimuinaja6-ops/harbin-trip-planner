@@ -28,6 +28,15 @@ function migrateLocalToFirebase() {
     if (expenses.length > 0) {
       expenses.forEach(e => push(ref(db, 'shared/expenses'), e));
     }
+    // Migrate packing checklist
+    const checked = JSON.parse(localStorage.getItem('harbin-pack-v2') || '{}');
+    if (Object.keys(checked).length > 0) {
+      set(ref(db, 'shared/packing/checked'), checked);
+    }
+    const extras = JSON.parse(localStorage.getItem('harbin-extras') || '{}');
+    if (Object.keys(extras).length > 0) {
+      set(ref(db, 'shared/packing/extras'), extras);
+    }
   } catch (e) { /* ignore parse errors */ }
   localStorage.setItem('harbin-migrated-to-firebase', '1');
 }

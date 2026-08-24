@@ -1,12 +1,24 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import PACK from '../data/packing';
 import TEAM from '../data/team';
+import {db,ref,onValue,set} from '../firebase';
 
 export default function PackingSection(){
   const[who,setWho]=useState(()=>localStorage.getItem('harbin-who')||TEAM[0].name);
-  const[checked,setChecked]=useState(()=>{try{return JSON.parse(localStorage.getItem('harbin-pack-v2')||'{}');}catch{return{};}});
-  const[extras,setExtras]=useState(()=>{try{return JSON.parse(localStorage.getItem('harbin-extras')||'{}');}catch{return{};}});
+  const[checked,setChecked]=useState({});
+  const[extras,setExtras]=useState({});
   const[newItem,setNewItem]=useState('');
+
+  // Sync checked + extras from Firebase
+  useEffect(()=>{
+    const unsub1=onValue(ref(db,'shared/packing/checked'),(snap)=>{
+      setChecked(snap.val()||{});
+    });
+    const unsub2=onValue(ref(db,'shared/packing/extras'),(snap)=>{
+      setExtras(snap.val()||{});
+    });
+    return()=>{unsub1();unsub2();};
+  },[]);
 
   const myExtras=extras[who]||[];
   const myList=[...PACK,...myExtras];
@@ -15,16 +27,16 @@ export default function PackingSection(){
 
   const toggle=(label)=>{
     const next={...checked,[who]:{...mine,[label]:!mine[label]}};
-    setChecked(next);localStorage.setItem('harbin-pack-v2',JSON.stringify(next));
+    setChecked(next);set(ref(db,'shared/packing/checked'),next);
   };
   const addItem=()=>{
     const label=newItem.trim();if(!label)return;
     const all={...extras,[who]:[...myExtras,label]};
-    setExtras(all);localStorage.setItem('harbin-extras',JSON.stringify(all));setNewItem('');
+    setExtras(all);set(ref(db,'shared/packing/extras'),all);setNewItem('');
   };
   const removeItem=(label)=>{
     const all={...extras,[who]:myExtras.filter(x=>x!==label)};
-    setExtras(all);localStorage.setItem('harbin-extras',JSON.stringify(all));
+    setExtras(all);set(ref(db,'shared/packing/extras'),all);
   };
   const selectWho=(name)=>{localStorage.setItem('harbin-who',name);setWho(name);};
 
