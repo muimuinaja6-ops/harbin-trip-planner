@@ -14,4 +14,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// One-time migration: push localStorage data to Firebase (runs once per device)
+function migrateLocalToFirebase() {
+  if (localStorage.getItem('harbin-migrated-to-firebase')) return;
+  try {
+    // Migrate custom phrases
+    const phrases = JSON.parse(localStorage.getItem('harbin-phrases') || '[]');
+    if (phrases.length > 0) {
+      phrases.forEach(p => push(ref(db, 'shared/phrases'), p));
+    }
+    // Migrate expenses
+    const expenses = JSON.parse(localStorage.getItem('harbin-expenses') || '[]');
+    if (expenses.length > 0) {
+      expenses.forEach(e => push(ref(db, 'shared/expenses'), e));
+    }
+  } catch (e) { /* ignore parse errors */ }
+  localStorage.setItem('harbin-migrated-to-firebase', '1');
+}
+migrateLocalToFirebase();
+
 export { db, ref, onValue, set, push, remove };
