@@ -7,6 +7,7 @@ import RouteSection from './components/RouteSection';
 import AmapSection from './components/AmapSection';
 import CurrencySection from './components/CurrencySection';
 import MusicPlayer from './components/MusicPlayer';
+import WelcomeModal from './components/WelcomeModal';
 import PackingSection from './components/PackingSection';
 import PhrasesSection from './components/PhrasesSection';
 import ExpenseSplitter from './components/ExpenseSplitter';
@@ -44,6 +45,7 @@ export default function App(){
 
   return(<div style={{minHeight:'100vh',background:'linear-gradient(180deg,#BFE6FF 0%,#E4F5FF 300px,#FFFFFF 700px)',position:'relative',overflowX:'hidden'}}>
     <SnowEffect/>
+    <WelcomeModal/>
     <div style={{maxWidth:480,margin:'0 auto',paddingBottom:60,width:'100%'}}>
 
       {/* Hero Header */}
